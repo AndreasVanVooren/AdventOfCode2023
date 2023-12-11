@@ -1,7 +1,7 @@
 use std::fs;
 use std::path::PathBuf;
 
-use crate::days::day_base::DayTrait;
+use crate::days::DayTrait;
 
 pub struct Day {}
 
@@ -49,8 +49,7 @@ impl Day {
                 let result_fwd = str_value.find(s);
                 let result_rvs = str_value.rfind(s);
                 if result_fwd.is_some() {
-                    if first_digit_idx.is_none() || first_digit_idx.unwrap() > result_fwd.unwrap()
-                    {
+                    if first_digit_idx.is_none() || first_digit_idx.unwrap() > result_fwd.unwrap() {
                         first_digit = Some(i as u32);
                         first_digit_idx = result_fwd;
                     }
@@ -95,17 +94,25 @@ impl Day {
 mod day_01_test {
     // Needed because otherwise the module doesn't know about
     // the day struct even though it's in the same f***ing file.
-    use crate::days::day_01::day_impl_01::Day;
+    use crate::days::day_01::day_impl::Day;
+    use crate::days::day_base::DayCommon;
     #[test]
     fn test_with_base_str() {
         let test_str = "1abc2\npqr3stu8vwx\na1b2c3d4e5f\ntreb7uchet";
-        let out_value = Day::process_file_str(&test_str, false);
-        assert_eq!(out_value, String::from("142"));
+        let mut sum: u32 = 0;
+        DayCommon::for_each_line_in_input_str(test_str, |s| {
+            sum += Day::process_digits(s, false);
+        });
+        assert_eq!(sum, 142);
     }
     #[test]
     fn test_with_base_str_str_interp() {
         let test_str = "two1nine\neightwothree\nabcone2threexyz\nxtwone3four\n4nineeightseven2\nzoneight234\n7pqrstsixteen\n";
-        let out_value = Day::process_file_str(&test_str, true);
-        assert_eq!(out_value, String::from("281"));
+
+        let mut sum: u32 = 0;
+        DayCommon::for_each_line_in_input_str(test_str, |s| {
+            sum += Day::process_digits(s, true);
+        });
+        assert_eq!(sum, 281);
     }
 }

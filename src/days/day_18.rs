@@ -1,1 +1,1 @@
-pub mod day_impl_18;
+pub mod day_impl;
