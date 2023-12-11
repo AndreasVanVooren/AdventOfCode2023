@@ -1,8 +1,8 @@
 use std::path::Path;
 use std::path::PathBuf;
 
-use std::io;
 use crate::utils::grid;
+use std::io;
 
 pub trait DayTrait {
     fn get_result_str() -> String;
@@ -44,18 +44,27 @@ impl DayCommon {
     {
         str_value.lines().for_each(func);
     }
-    
-    pub fn input_str_to_grid<T, F>(str_value: &str, func : F) -> grid::Grid<T>
-        where F: Fn(grid::Coord, char) -> T
+
+    pub fn input_str_to_grid<T, F>(str_value: &str, func: F) -> grid::Grid<T>
+    where
+        F: Fn(grid::Coord, char) -> T,
     {
         let mut grid = grid::Grid::<T>::new();
-        let mut row_num : i64 = 0;
-        DayCommon::for_each_line_in_input_str(str_value, |s|{
-            if s.is_empty() {return;}
-            let mut col_num : i64 = 0;
+        let mut row_num: i64 = 0;
+        DayCommon::for_each_line_in_input_str(str_value, |s| {
+            if s.is_empty() {
+                return;
+            }
+            let mut col_num: i64 = 0;
             let mut row = Vec::<T>::new();
             for c in s.chars() {
-                row.push( func(grid::Coord{x:col_num, y:row_num}, c) );
+                row.push(func(
+                    grid::Coord {
+                        x: col_num,
+                        y: row_num,
+                    },
+                    c,
+                ));
                 col_num += 1;
             }
             grid.push(row);
@@ -63,17 +72,26 @@ impl DayCommon {
         });
         return grid;
     }
-    pub fn input_file_to_grid<DT: DayTrait, T, F>(func : F) -> grid::Grid<T>
-        where F: Fn(grid::Coord, char) -> T
+    pub fn input_file_to_grid<DT: DayTrait, T, F>(func: F) -> grid::Grid<T>
+    where
+        F: Fn(grid::Coord, char) -> T,
     {
         let mut grid = grid::Grid::<T>::new();
-        let mut row_num : i64 = 0;
-        DayCommon::for_each_line_in_input_file::<DT, _>(|s|{
-            if s.is_empty() {return;}
-            let mut col_num : i64 = 0;
+        let mut row_num: i64 = 0;
+        DayCommon::for_each_line_in_input_file::<DT, _>(|s| {
+            if s.is_empty() {
+                return;
+            }
+            let mut col_num: i64 = 0;
             let mut row = Vec::<T>::new();
             for c in s.chars() {
-                row.push( func(grid::Coord{x:col_num, y:row_num}, c) );
+                row.push(func(
+                    grid::Coord {
+                        x: col_num,
+                        y: row_num,
+                    },
+                    c,
+                ));
                 col_num += 1;
             }
             grid.push(row);

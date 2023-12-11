@@ -2,8 +2,8 @@ use std::ops;
 
 #[derive(Debug, Default, Copy, Clone, PartialEq)]
 pub struct Coord {
-    pub x : i64,
-    pub y : i64
+    pub x: i64,
+    pub y: i64,
 }
 
 impl ops::Add<Coord> for Coord {
@@ -11,8 +11,8 @@ impl ops::Add<Coord> for Coord {
 
     fn add(self, rhs: Self) -> Self {
         Self {
-            x : self.x + rhs.x,
-            y : self.y + rhs.y
+            x: self.x + rhs.x,
+            y: self.y + rhs.y,
         }
     }
 }
@@ -28,8 +28,8 @@ impl ops::Sub<Coord> for Coord {
 
     fn sub(self, rhs: Self) -> Self {
         Self {
-            x : self.x - rhs.x,
-            y : self.y - rhs.y
+            x: self.x - rhs.x,
+            y: self.y - rhs.y,
         }
     }
 }
@@ -45,8 +45,8 @@ impl ops::Mul<Coord> for Coord {
 
     fn mul(self, rhs: Self) -> Self {
         Self {
-            x : self.x * rhs.x,
-            y : self.y * rhs.y
+            x: self.x * rhs.x,
+            y: self.y * rhs.y,
         }
     }
 }
@@ -62,8 +62,8 @@ impl ops::Div<Coord> for Coord {
 
     fn div(self, rhs: Self) -> Self {
         Self {
-            x : self.x / rhs.x,
-            y : self.y / rhs.y
+            x: self.x / rhs.x,
+            y: self.y / rhs.y,
         }
     }
 }
@@ -74,25 +74,42 @@ impl ops::DivAssign<Coord> for Coord {
     }
 }
 
-pub type Grid<T> = Vec::<Vec::<T>>;
+pub type Grid<T> = Vec<Vec<T>>;
 
-pub fn for_grid_on_other_grid<C, O, T>(recipient: &mut Grid::<T>, source: &Grid::<T>,location: &Coord, condition: &C, operation: &mut O)
-where C: Fn(&T,&T) -> bool, O: FnMut(&mut T, &T)
+pub fn for_grid_on_other_grid<C, O, T>(
+    recipient: &mut Grid<T>,
+    source: &Grid<T>,
+    location: &Coord,
+    condition: &C,
+    operation: &mut O,
+) where
+    C: Fn(&T, &T) -> bool,
+    O: FnMut(&mut T, &T),
 {
     assert_ne!(source.len(), 0);
-    assert!(source.len() as i64 + location.y <= recipient.len() as i64 );
-    assert!(source[0].len() as i64 + location.x <= recipient[0].len() as i64 );
-    
-    for row in (0 .. source.len()) {
-        for col in (0..source[row].len()) {
+    assert!(source.len() as i64 + location.y <= recipient.len() as i64);
+    assert!(source[0].len() as i64 + location.x <= recipient[0].len() as i64);
+
+    for row in 0..source.len() {
+        for col in 0..source[row].len() {
             let coord = Coord {
-                x : row as i64 + location.y as i64,
-                y : col as i64 + location.x as i64
+                x: row as i64 + location.y as i64,
+                y: col as i64 + location.x as i64,
             };
-            
-            if coord.y >= 0 && coord.y < recipient.len() as i64 && coord.x >= 0 && coord.x < recipient[0].len() as i64 {
-                if condition(&recipient[coord.y as usize][coord.x as usize], &source[row][col]) {
-                    operation(&mut recipient[coord.y as usize][coord.x as usize], &source[row][col]);
+
+            if coord.y >= 0
+                && coord.y < recipient.len() as i64
+                && coord.x >= 0
+                && coord.x < recipient[0].len() as i64
+            {
+                if condition(
+                    &recipient[coord.y as usize][coord.x as usize],
+                    &source[row][col],
+                ) {
+                    operation(
+                        &mut recipient[coord.y as usize][coord.x as usize],
+                        &source[row][col],
+                    );
                 }
             }
         }
@@ -116,7 +133,7 @@ where C: Fn(&T,&T) -> bool, O: FnMut(&mut T, &T)
 //                        x : row as i64 + rec_row as i64,
 //                        y : col as i64 + rec_col as i64
 //                    };
-//                    
+//
 //                    if coord.y >= 0 && coord.y < recipient.len() as i64 && coord.x >= 0 && coord.x < rec_row_ref.len() as i64 {
 //                        let mut row_ref = &recipient[coord.y as usize];
 //                        let mut elem_ref = &mut row_ref[coord.x as usize];
