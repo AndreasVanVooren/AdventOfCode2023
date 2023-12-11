@@ -31,6 +31,17 @@ impl DayCommon {
         let str_value = std::fs::read_to_string(path);
         DayCommon::for_each_line_in_input_str(&str_value.expect("Expected file to be read"), func);
     }
+    pub fn for_each_line_in_path_indexed<P, F>(path: P, func: F)
+    where
+        P: AsRef<Path>,
+        F: FnMut((usize, &str)),
+    {
+        let str_value = std::fs::read_to_string(path);
+        DayCommon::for_each_line_in_input_str_indexed(
+            &str_value.expect("Expected file to be read"),
+            func,
+        );
+    }
     pub fn for_each_line_in_input_file<T: DayTrait, F>(func: F)
     where
         F: FnMut(&str),
@@ -38,11 +49,24 @@ impl DayCommon {
         let path = DayCommon::get_input_path_fs::<T>();
         DayCommon::for_each_line_in_path(path.expect("Expected path to be valid."), func);
     }
+    pub fn for_each_line_in_input_file_indexed<T: DayTrait, F>(func: F)
+    where
+        F: FnMut((usize, &str)),
+    {
+        let path = DayCommon::get_input_path_fs::<T>();
+        DayCommon::for_each_line_in_path_indexed(path.expect("Expected path to be valid."), func);
+    }
     pub fn for_each_line_in_input_str<F>(str_value: &str, func: F)
     where
         F: FnMut(&str),
     {
         str_value.lines().for_each(func);
+    }
+    pub fn for_each_line_in_input_str_indexed<F>(str_value: &str, func: F)
+    where
+        F: FnMut((usize, &str)),
+    {
+        str_value.lines().enumerate().for_each(func);
     }
 
     pub fn input_str_to_grid<T, F>(str_value: &str, func: F) -> grid::Grid<T>
